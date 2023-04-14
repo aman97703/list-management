@@ -1,25 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import Users from "./Components/Users";
+import Form from "./Components/Form";
+import axios from "axios";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-function App() {
+const App = () => {
+  const [state, setState] = useState(0);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      await axios({
+        url: `https://jsonplaceholder.typicode.com/users`,
+        method: "get",
+      }).then((res) => {
+        setUsers(res.data);
+      });
+    })();
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ToastContainer 
+        theme="dark"
+      />
+      {state === 0 ? (
+        <Users setState={setState} users={users} setUsers={setUsers} />
+      ) : (
+        <Form setState={setState} setUsers={setUsers} users={users} />
+      )}
     </div>
   );
-}
+};
 
 export default App;
